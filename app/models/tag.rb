@@ -1,5 +1,4 @@
 class Tag < ActiveRecord::Base
-  validates :name, :slug, :hidden_boolean, presence: true
 
   MAX_WEIGHT = 24
   MIN_WEIGHT = 8

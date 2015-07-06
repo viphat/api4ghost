@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json }, path: '/'  do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       resources :tags, :only => [:index]
+      resources :posts, :only => [] do
+        get 'archive', on: :collection
+      end
     end
   end
   # You can have the root of your site routed with "root"
