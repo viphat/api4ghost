@@ -1,8 +1,21 @@
 class Post < ActiveRecord::Base
   attr_reader :link, :published_month
 
-  def self.get_posts(limit=1)
-    Post.where(page: false).where.not(published_at: nil).order('posts.published_at DESC')
+  def self.get_posts()
+    posts  = []
+    Post.where(page: false).find_each do |post|
+      posts.push({
+        title: post.title,
+        slug: post.slug,
+        content: post.markdown,
+        status: post.status,
+        visibility: post.visibility,
+        created_at: post.created_at.to_i * 1000,
+        updated_at: post.updated_at.to_i * 1000,
+        published_at: post.published_at.to_i * 1000
+      })
+    end
+    posts
   end
 
   def self.get_month_archive

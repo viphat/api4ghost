@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   namespace :api, defaults: { format: :json }, path: '/'  do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
-      resources :tags, :only => [:index]
+      resources :tags, :only => [:index] do
+        get 'get_tags', on: :collection
+      end
       resources :posts, :only => [] do
         get 'archive', on: :collection
         get 'get_posts', on: :collection

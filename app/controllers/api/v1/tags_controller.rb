@@ -9,4 +9,9 @@ class Api::V1::TagsController < ApplicationController
     render json: @tags, each_serializer: TagSerializer
   end
 
+  def get_tags
+    tags = Tag.get_tags()
+    render json: { tags: tags }
+  end
+
 end

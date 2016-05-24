@@ -33,4 +33,21 @@ class Tag < ActiveRecord::Base
     "http://notes.viphat.work/tag/#{self.slug}"
   end
 
+  def self.get_tags()
+    tags = []
+    Tag.includes(:posts_tags).find_each do |tag|
+      posts = {}
+      tag.posts_tags.each do |post_tag|
+        post = Post.find_by_id(post_tag.post_id)
+        posts[post.slug] = post_tag.sort_order
+      end
+      tags.push({
+        name: tag.name,
+        slug: tag.slug,
+        posts: posts
+      })
+    end
+    tags
+  end
+
 end

@@ -1,8 +1,8 @@
 class Api::V1::PostsController < ApplicationController
 
   def get_posts
-    p = Post.get_posts(1)
-    render json: { posts: p }
+    posts = Post.get_posts
+    render json: { posts: posts }
   end
 
   def archive
