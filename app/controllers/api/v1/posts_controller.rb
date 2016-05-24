@@ -1,5 +1,10 @@
 class Api::V1::PostsController < ApplicationController
 
+  def get_posts
+    p = Post.get_posts(1)
+    render json: { posts: p }
+  end
+
   def archive
     posts = Post.get_post_archive
     months = Post.get_month_archive

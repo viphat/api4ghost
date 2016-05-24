@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :tags, :only => [:index]
       resources :posts, :only => [] do
         get 'archive', on: :collection
+        get 'get_posts', on: :collection
       end
     end
   end

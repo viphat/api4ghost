@@ -1,6 +1,10 @@
 class Post < ActiveRecord::Base
   attr_reader :link, :published_month
 
+  def self.get_posts(limit=1)
+    Post.where(page: false).where.not(published_at: nil).order('posts.published_at DESC')
+  end
+
   def self.get_month_archive
     Post.where(page: false).where.not(published_at: nil).order('posts.published_at DESC').pluck("concat(date_part('month',posts.published_at),'/',date_part('year',posts.published_at)) as published_month").uniq()
   end
@@ -20,4 +24,5 @@ class Post < ActiveRecord::Base
     end
     grouped_posts
   end
+
 end
