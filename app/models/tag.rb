@@ -33,21 +33,20 @@ class Tag < ActiveRecord::Base
     "http://notes.viphat.work/tag/#{self.slug}"
   end
 
-  def self.get_tags()
-    tags = []
-    Tag.includes(:posts_tags).find_each do |tag|
-      posts = {}
-      tag.posts_tags.each do |post_tag|
-        post = Post.find_by_id(post_tag.post_id)
-        posts[post.slug] = post_tag.sort_order
+  def self.get_posts_tags()
+    posts = []
+    Post.where(page: false).find_each do |post|
+      p = { slug: post.slug, tags: {} }
+      Tag.where(id: PostsTag.where(post_id: post.id).select(:tag_id)).find_each do |tag|
+        if tag.slug == "u-tuong"
+          p[:tags][:"y-tuong"] = tag.name
+        else
+          p[:tags][tag.slug] = tag.name
+        end
       end
-      tags.push({
-        name: tag.name,
-        slug: tag.slug,
-        posts: posts
-      })
+      posts.push p
     end
-    tags
+    posts
   end
 
 end

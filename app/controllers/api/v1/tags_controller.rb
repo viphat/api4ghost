@@ -10,8 +10,8 @@ class Api::V1::TagsController < ApplicationController
   end
 
   def get_tags
-    tags = Tag.get_tags()
-    render json: { tags: tags }
+    posts = Tag.get_posts_tags()
+    render json: { posts: posts }
   end
 
 end
