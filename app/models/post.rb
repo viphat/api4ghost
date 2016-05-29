@@ -1,5 +1,41 @@
+require 'fileutils'
+
 class Post < ActiveRecord::Base
   attr_reader :link, :published_month
+
+  def self.export_posts_to_markdown()
+    path = '/home/viphat/md'
+
+    Post.where(page: false).find_each do |post|
+      file_path =
+        if post.status == "published"
+          "#{path}/published/#{post.published_at.year}"
+        else
+          "#{path}/draft/"
+        end
+      FileUtils::mkdir_p(file_path)
+      if post.status == "published"
+        file_name = "#{file_path}/#{post.published_at.strftime("%Y-%m-%d")}-#{post.slug}.md"
+      else
+        file_name = "#{file_path}/#{post.slug}.md"
+      end
+
+      target = open(file_name, 'w')
+      tags_ids = PostsTag.where(post_id: post.id).pluck(:tag_id)
+      tags = Tag.where(id: tags_ids).map { |x| x.slug }
+      target.write("---\n")
+      target.write("layout: default\n")
+      target.write("title: \"#{post.title}\"\n")
+      target.write("date: #{post.published_at.strftime('%Y-%m-%d %H:%M:%S')}\n") if post.status == "published"
+      target.write("permalink: /:slug\n")
+      target.write("tags: [#{tags.join(', ')}]\n")
+      target.write("---\n")
+      target.write("\n")
+      target.write(post.markdown)
+      target.write("\n")
+      target.close()
+    end
+  end
 
   def self.get_posts()
     posts  = []
